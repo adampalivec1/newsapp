@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Source {
+  id               String         @id @default(cuid())
+  provider         String
+  accountEmail     String
+  senderEmail      String
+  displayName      String
+  category         String
+  active           Boolean        @default(true)
+  fetchWindowHours Int            @default(20)
+  createdAt        DateTime       @default(now())
+  fetchedEmails    FetchedEmail[]
+}
+
+model FetchedEmail {
+  id            String    @id @default(cuid())
+  sourceId      String
+  source        Source    @relation(fields: [sourceId], references: [id])
+  subject       String
+  receivedAt    DateTime
+  rawHtml       String
+  extractedText String
+  processedAt   DateTime?
+  createdAt     DateTime  @default(now())
+}
+
+model Digest {
+  id           String       @id @default(cuid())
+  date         DateTime
+  generatedAt  DateTime     @default(now())
+  sections     String
+  topStories   String
+  rawSources   String
+  status       String       @default("generating")
+  savedStories SavedStory[]
+}
+
+model SavedStory {
+  id            String    @id @default(cuid())
+  digestId      String
+  digest        Digest    @relation(fields: [digestId], references: [id])
+  storySnapshot String
+  savedAt       DateTime  @default(now())
+  readAt        DateTime?
+  tags          String
+}
