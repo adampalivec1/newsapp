@@ -2,6 +2,7 @@ import { getSources } from "@/lib/db/queries";
 import SourceList from "@/components/settings/SourceList";
 import AddSourceForm from "@/components/settings/AddSourceForm";
 
+export const dynamic = "force-dynamic";
 export const metadata = { title: "Settings – Morning Briefing" };
 
 export default async function SettingsPage() {
